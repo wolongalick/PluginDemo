@@ -24,7 +24,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         PluginManager.getInstance().init(this);
-        PluginManager.getInstance().loadApk(new File(Environment.getExternalStorageDirectory(),"pluginapp-debug.apk").getAbsolutePath());
     }
 
     public void onClickBtn(View view) {
@@ -41,6 +40,14 @@ public class MainActivity extends Activity {
      * 跳转到插件app的主页面
      */
     private void gotoPluginApp() {
+        File file = new File(Environment.getExternalStorageDirectory(), "pluginapp-debug.apk");
+        if(!file.exists()){
+            Toast.makeText(this,"请将插件:pluginapp-debug.apk放到SD卡根目录",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        PluginManager.getInstance().loadApk(file.getAbsolutePath());
+
         Intent intent=new Intent(this,ProxyActivity.class);
         intent.putExtra(IntentKey.ACTIVITY_FULL_NAME,PluginManager.getInstance().getPackageInfo().activities[0].name);
         startActivity(intent);
